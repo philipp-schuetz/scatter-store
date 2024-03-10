@@ -1,16 +1,34 @@
 package com.philippschuetz
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+import com.sksamuel.hoplite.ConfigLoaderBuilder
+import com.sksamuel.hoplite.addResourceSource
+import picocli.CommandLine
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+
+@CommandLine.Command(name = "scatter-store", mixinStandardHelpOptions = true, version = ["scatter-store 1.0"],
+    description = ["Encrypts, splits and uploads files to different cloud storage providers."])
+class ScatterStore : Callable<Int> {
+
+    @CommandLine.Option(names = ["-f", "--file"], description = ["RegEx for files to upload."])
+    lateinit var file: Regex
+
+    @CommandLine.Option(names = ["-k", "--key"], description = ["Key for file encryption, see config. default: 0"])
+    var algorithm: Int = 0
+
+    @CommandLine.Option(names = ["-p", "--provider"], description = ["Add a cloud storage provider."])
+    lateinit var provider: ProviderType
+
+
+    override fun call(): Int {
+        val config = ConfigLoaderBuilder.default()
+            .addResourceSource("/scatter-store.json")
+            .build()
+            .loadConfigOrThrow<Config>()
+        println(config)
+        return 0
     }
 }
+
+fun main(args: Array<String>) : Unit = exitProcess(CommandLine(ScatterStore()).execute(*args))
