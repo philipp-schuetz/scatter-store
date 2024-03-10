@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "id": "11111111",
+      "providers": [
+        "GoogleDrive",
+        "Dropbox"
+      ],
+      "encryption": "1111",
+      "name": "filexyz"
+    }
+  ],
+  "providers": [
+    {
+      "name": "GoogleDrive",
+      "username": "user",
+      "password": "****"
+    },
+    {
+      "name": "Dropbox",
+      "username": "user",
+      "password": "****"
+    }
+  ],
+  "encryption": [
+    {
+      "id": "1111",
+      "algorithm": "AES",
+      "key": "paqh489hqgnuq3h4vuibßv349hvbn4hpnap489bgq0p49gbqkjdbfboaiueboier"
+    }
+  ]
+}
