@@ -1,32 +1,30 @@
 package com.philippschuetz
 
-import java.io.File
-import java.io.FileOutputStream
-import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.fileSize
+import kotlin.io.path.inputStream
+import kotlin.io.path.outputStream
 
 
-private fun splitByFileSize(inputFile: File, maxSizeOfSplitFiles: Int, fileId: String): List<File> {
-    val listOfSplitFiles: MutableList<File> = ArrayList()
-    Files.newInputStream(inputFile.toPath()).use { `in` ->
+private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: String): List<Path> {
+    val listOfSplitFiles: MutableList<Path> = ArrayList()
+    inputFile.inputStream().use { `in` ->
         val buffer = ByteArray(maxSizeOfSplitFiles)
         var dataRead = `in`.read(buffer)
         while (dataRead > -1) {
-            val splitFile = getSplitFile(fileId, buffer, dataRead)
+            val splitFile = getSplitFile(fileId, buffer, dataRead, listOfSplitFiles.size+1)
             listOfSplitFiles.add(splitFile)
             dataRead = `in`.read(buffer)
         }
     }
     return listOfSplitFiles
 }
-var fileNumber = 0
-private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int): File {
-    fileNumber += 1
-    println(fileNumber)
-    val splitFile = File.createTempFile("$fileId-", "$fileNumber", File(".")) //getTmpFolder().toFile()
-    FileOutputStream(splitFile).use { fos ->
+private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int): Path {
+    val splitFileT = Path.of("./$fileId-$fileNumber")// directory: getTmpFolder()
+    splitFileT.outputStream().use { fos ->
         fos.write(buffer, 0, length)
     }
-    return splitFile
+    return splitFileT
 }
 
 
@@ -42,10 +40,10 @@ private fun getSizeInBytes(inputFileSizeInBytes: Long, numberOfFiles: Int): Int 
     return x.toInt()
 }
 
-fun splitFile(inputFile: File, numberOfFiles: Int, fileId: String): List<File> {
-    return splitByFileSize(inputFile, getSizeInBytes(inputFile.length(), numberOfFiles), fileId)
+fun splitFile(inputFile: Path, numberOfFiles: Int, fileId: String): List<Path> {
+    return splitByFileSize(inputFile, getSizeInBytes(inputFile.fileSize(), numberOfFiles), fileId)
 }
 
 fun main() {
-    splitFile(File("test.json"), 2, "qwertz")
+    splitFile(Path.of("test.json"), 2, "qwertz")
 }
