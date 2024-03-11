@@ -1,15 +1,14 @@
 package com.philippschuetz
 
-import com.philippschuetz.configuration.Config
-import com.sksamuel.hoplite.ConfigLoaderBuilder
-import com.sksamuel.hoplite.addResourceSource
 import picocli.CommandLine
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 
-@CommandLine.Command(name = "scatter-store", mixinStandardHelpOptions = true, version = ["scatter-store 1.0"],
-    description = ["Encrypts, splits and uploads files to different cloud storage providers."])
+@CommandLine.Command(
+    name = "scatter-store", mixinStandardHelpOptions = true, version = ["scatter-store 1.0"],
+    description = ["Encrypts, splits and uploads files to different cloud storage providers."]
+)
 class ScatterStore : Callable<Int> {
 
     @CommandLine.Option(names = ["-f", "--file"], description = ["RegEx for files to upload."])
@@ -23,13 +22,9 @@ class ScatterStore : Callable<Int> {
 
 
     override fun call(): Int {
-        val config = ConfigLoaderBuilder.default()
-            .addResourceSource("/scatter-store.json")
-            .build()
-            .loadConfigOrThrow<Config>()
-        println(config)
+
         return 0
     }
 }
 
-fun main(args: Array<String>) : Unit = exitProcess(CommandLine(ScatterStore()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(ScatterStore()).execute(*args))

@@ -1,25 +1,18 @@
 {
-  "files": [
-    {
-      "id": "11111111",
-      "providers": [
-        "GoogleDrive",
-        "Dropbox"
-      ],
-      "encryption": "1111",
-      "name": "filexyz"
-    }
-  ],
   "providers": [
     {
-      "name": "GoogleDrive",
-      "username": "user",
-      "password": "****"
+      "id": "1111",
+      "name": "FTP 1",
+      "type": "FTP",
+      "username": "ftp1",
+      "password": "123"
     },
     {
-      "name": "Dropbox",
-      "username": "user",
-      "password": "****"
+      "id": "2222",
+      "name": "FTP 2",
+      "type": "FTP",
+      "username": "ftp1",
+      "password": "456"
     }
   ],
   "encryption": [
