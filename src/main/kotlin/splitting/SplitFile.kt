@@ -1,4 +1,4 @@
-package com.philippschuetz
+package com.philippschuetz.splitting
 
 import java.nio.file.Path
 import kotlin.io.path.fileSize
@@ -20,7 +20,7 @@ private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: S
     return listOfSplitFiles
 }
 private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int): Path {
-    val splitFileT = Path.of("./$fileId-$fileNumber")// directory: getTmpFolder()
+    val splitFileT = Path.of("./$fileId-$fileNumber")// TODO directory: getTmpFolder()
     splitFileT.outputStream().use { fos ->
         fos.write(buffer, 0, length)
     }
