@@ -1,5 +1,7 @@
-package com.philippschuetz
+package com.philippschuetz.configuration
 
+import com.philippschuetz.EncryptionType
+import com.philippschuetz.ProviderType
 import java.net.URL
 
 data class ConfigSectionFile(val id: String, val providers: List<ProviderType>, val encryption: String, val name: String)
