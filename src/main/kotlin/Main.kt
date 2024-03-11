@@ -1,5 +1,6 @@
 package com.philippschuetz
 
+import com.philippschuetz.configuration.Config
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addResourceSource
 import picocli.CommandLine
