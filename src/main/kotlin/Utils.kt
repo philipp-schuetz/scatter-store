@@ -22,8 +22,15 @@ fun getTmpFolder(): Path {
 }
 
 /**
- * Get the directory to use for storage of persistent data. Supports operating systems.
+ * Get the directory to use for storage of persistent data. Supports multiple operating systems.
  */
 fun getDataFolder(): Path {
     return Path(".") // TODO
+}
+
+/**
+ * Get the path to use for the config file. Supports multiple operating systems.
+ */
+fun getConfigPath(): Path {
+    return Path("${getDataFolder()}/scatter-store.json")
 }
