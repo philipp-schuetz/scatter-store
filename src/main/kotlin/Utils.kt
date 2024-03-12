@@ -34,3 +34,15 @@ fun getDataFolder(): Path {
 fun getConfigPath(): Path {
     return Path("${getDataFolder()}/scatter-store.json")
 }
+
+/**
+ * Get a random String from a-zA-Z0-9.
+ * @param length Specify the length of the generated String.
+ */
+fun getRandomString(length: Int): String {
+    val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+    return (1..length)
+        .map { kotlin.random.Random.nextInt(0, charPool.size) }
+        .map(charPool::get)
+        .joinToString("")
+}
