@@ -1,5 +1,10 @@
 package com.philippschuetz.encryption
 
+import com.philippschuetz.EncryptionType
+import com.philippschuetz.configuration.ConfigModelSectionEncryption
+import com.philippschuetz.configuration.readConfig
+import com.philippschuetz.configuration.writeConfig
+import com.philippschuetz.getRandomString
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.nio.file.Path
@@ -16,18 +21,30 @@ import kotlin.io.path.readBytes
 
 class EncryptionAES {
 
-    fun generateKey() {
-        val secureRandom = SecureRandom()
-        val keyGenerator = KeyGenerator.getInstance("AES")
-        keyGenerator?.init(256, secureRandom)
-        val secretKey = keyGenerator?.generateKey()
-        val encodedKey: String = Base64.getEncoder().encodeToString(secretKey!!.encoded)
+    companion object {
+        fun generateKey() {
+            val secureRandom = SecureRandom()
+            val keyGenerator = KeyGenerator.getInstance("AES")
+            keyGenerator?.init(256, secureRandom)
+            val secretKey = keyGenerator?.generateKey()
 
-        TODO("write key to config")
+            val encodedKey: String = Base64.getEncoder().encodeToString(secretKey!!.encoded)
+            val modifiedConfig = readConfig()
+            val modifiedEncryptionList = modifiedConfig.encryption.toMutableList()
+            modifiedEncryptionList.add(
+                ConfigModelSectionEncryption(
+                    getRandomString(8),//TODO check if this id has already been used in config
+                    EncryptionType.AES,
+                    encodedKey
+                )
+            )
+            modifiedConfig.encryption = modifiedEncryptionList
+            writeConfig(modifiedConfig)
+        }
     }
 
-    private fun getSecretKey(): SecretKey {
-        TODO("get secret key from config")
+    private fun getSecretKey(keyIndex: Int): SecretKey {
+        return SecretKeySpec(Base64.getDecoder().decode(readConfig().encryption[keyIndex].key), "AES")
     }
 
     private fun saveFile(fileData: ByteArray, filePath: Path) {
@@ -47,25 +64,25 @@ class EncryptionAES {
         return fileContents
     }
 
-    fun encryptFiles(inputFiles: List<Path>) {
+    fun encryptFiles(inputFiles: List<Path>, keyIndex: Int) {
         for (filePath in inputFiles) {
             val fileData = readFile(filePath)
-            val secretKey = getSecretKey()
+            val secretKey = getSecretKey(keyIndex)
 
             val data = secretKey.encoded
             val secretKeySpec = SecretKeySpec(data, 0, data.size, "AES")
             val cipher = Cipher.getInstance("AES", "BC")
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(ByteArray(cipher.getBlockSize())))
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(ByteArray(cipher.blockSize)))
             val encodedData = cipher.doFinal(fileData)
 
             saveFile(encodedData, filePath)
         }
     }
 
-    fun decryptFiles(inputFiles: List<Path>) {
+    fun decryptFiles(inputFiles: List<Path>, keyIndex: Int) {
         for (filePath in inputFiles) {
             val fileData = readFile(filePath)
-            val secretKey = getSecretKey()
+            val secretKey = getSecretKey(keyIndex)
 
             val decrypted: ByteArray
             val cipher = Cipher.getInstance("AES", "BC")

@@ -11,20 +11,20 @@ import kotlin.io.path.writeText
 
 @Serializable
 data class ConfigModelSectionProvider(
-    val id: String,
-    val name: String,
-    val type: ProviderType,
-    val username: String,
-    val password: String,
+    var id: String,
+    var name: String,
+    var type: ProviderType,
+    var username: String,
+    var password: String,
 )
 
 @Serializable
-data class ConfigModelSectionEncryption(val id: String, val algorithm: EncryptionType, val key: String)
+data class ConfigModelSectionEncryption(var id: String, var algorithm: EncryptionType, var key: String)
 
 @Serializable
 data class ConfigModel(
-    val providers: List<ConfigModelSectionProvider>,
-    val encryption: List<ConfigModelSectionEncryption>
+    var providers: List<ConfigModelSectionProvider>,
+    var encryption: List<ConfigModelSectionEncryption>
 )
 
 /**
