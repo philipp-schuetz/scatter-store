@@ -1,10 +1,8 @@
 package com.philippschuetz.encryption
 
 import com.philippschuetz.EncryptionType
-import com.philippschuetz.configuration.ConfigModelSectionEncryption
-import com.philippschuetz.configuration.readConfig
-import com.philippschuetz.configuration.writeConfig
-import com.philippschuetz.getRandomString
+import com.philippschuetz.configuration.addEncryptionKey
+import com.philippschuetz.configuration.getEncryptionKey
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.nio.file.Path
@@ -29,22 +27,12 @@ class EncryptionAES {
             val secretKey = keyGenerator?.generateKey()
 
             val encodedKey: String = Base64.getEncoder().encodeToString(secretKey!!.encoded)
-            val modifiedConfig = readConfig()
-            val modifiedEncryptionList = modifiedConfig.encryption.toMutableList()
-            modifiedEncryptionList.add(
-                ConfigModelSectionEncryption(
-                    getRandomString(8),//TODO check if this id has already been used in config
-                    EncryptionType.AES,
-                    encodedKey
-                )
-            )
-            modifiedConfig.encryption = modifiedEncryptionList
-            writeConfig(modifiedConfig)
+            addEncryptionKey(EncryptionType.AES, encodedKey)
         }
     }
 
     private fun getSecretKey(keyIndex: Int): SecretKey {
-        return SecretKeySpec(Base64.getDecoder().decode(readConfig().encryption[keyIndex].key), "AES")
+        return SecretKeySpec(Base64.getDecoder().decode(getEncryptionKey(keyIndex, EncryptionType.AES)), "AES")
     }
 
     private fun saveFile(fileData: ByteArray, filePath: Path) {
