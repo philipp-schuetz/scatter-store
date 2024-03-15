@@ -93,3 +93,10 @@ fun getEncryptionKey(keyIndex: Int, algorithm: EncryptionType): String {
     }
     return modifiedConfig.key
 }
+
+/**
+ * Write an empty config file.
+ */
+fun initConfig() {
+    writeConfig(ConfigModel(listOf(), listOf()))
+}
