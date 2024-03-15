@@ -1,8 +1,5 @@
 package com.philippschuetz
 
-import com.philippschuetz.configuration.ConfigModel
-import com.philippschuetz.configuration.ConfigModelSectionEncryption
-import com.philippschuetz.configuration.ConfigModelSectionProvider
 import picocli.CommandLine
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -25,10 +22,6 @@ class ScatterStore : Callable<Int> {
 
 
     override fun call(): Int {
-        ConfigModel(
-            listOf(ConfigModelSectionProvider("1111", "Test Provider", ProviderType.FTP, "ftp1", "123")),
-            listOf(ConfigModelSectionEncryption("2222", EncryptionType.AES, "paoipaf398n308w80fn"))
-        )
         return 0
     }
 }
