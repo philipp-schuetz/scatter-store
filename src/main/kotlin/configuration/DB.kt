@@ -24,7 +24,7 @@ class DB {
     }
 
     /**
-     * Create an empty file table in the database.
+     * Create an empty table in the database.
      */
     fun init() {
         database.useConnection { conn ->
