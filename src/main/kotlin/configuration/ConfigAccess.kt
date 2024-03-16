@@ -11,14 +11,21 @@ import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.system.exitProcess
 
+private interface ConfigModelSectionProvider
+
+
 @Serializable
-private data class ConfigModelSectionProvider(
+private data class ConfigModelSectionProviderFTP(
     var id: String,
     var name: String,
     var type: ProviderType,
     var username: String,
-    var password: String,
-)
+    var password: String?,
+    var keyAuth: Boolean,
+    var remoteHost: String,
+    var port: Int,
+    var remoteDir: String
+) : ConfigModelSectionProvider
 
 @Serializable
 private data class ConfigModelSectionEncryption(var id: String, var algorithm: EncryptionType, var key: String)
@@ -70,7 +77,6 @@ private fun <T> idInList(list: List<T>, id: String, idExtractor: (T) -> String):
 fun addEncryptionKey(algorithm: EncryptionType, key: String) {
     val modifiedConfig = readConfig()
     var generatedId: String
-    modifiedConfig.encryption[0].id
     do {
         generatedId = getRandomString(8)
     } while (idInList(modifiedConfig.encryption, generatedId) { it.id })
