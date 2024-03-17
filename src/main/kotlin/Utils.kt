@@ -1,5 +1,6 @@
 package com.philippschuetz
 
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
@@ -52,4 +53,16 @@ fun getRandomString(length: Int): String {
         .map { kotlin.random.Random.nextInt(0, charPool.size) }
         .map(charPool::get)
         .joinToString("")
+}
+
+/**
+ * This function takes a directory path as input and returns a list of all files within that directory and its subdirectories.
+ *
+ * @param dir The path of the directory to be scanned.
+ * @return A list of paths of all files within the specified directory and its subdirectories.
+ */
+fun listAllFiles(dir: Path): List<Path> {
+    return Files.walk(dir)
+        .filter { Files.isRegularFile(it) }
+        .toList()
 }
