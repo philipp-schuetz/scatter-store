@@ -36,6 +36,13 @@ fun getConfigPath(): Path {
 }
 
 /**
+ * Get the path to use for the database file. Supports multiple operating systems.
+ */
+fun getDBPath(): Path {
+    return Path("${getDataFolder()}/scatter-store.sqlite")
+}
+
+/**
  * Get a random String from a-zA-Z0-9.
  * @param length Specify the length of the generated String.
  */
