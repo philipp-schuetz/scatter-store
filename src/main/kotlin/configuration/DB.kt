@@ -45,6 +45,26 @@ class DB {
     }
 
     /**
+     * Checks if a file ID is already in use in the database.
+     *
+     * This function queries the database for the provided file ID. If the file ID is found in the database,
+     * the function returns true. If the file ID is not found, the function returns false.
+     *
+     * @param id The file ID to check.
+     * @return Boolean value indicating whether the file ID is in use.
+     */
+    fun fileIdInUse(id: String): Boolean {
+        val response = database
+            .from(FilesTable)
+            .select()
+            .where { (FilesTable.fileId eq id) }
+            .limit(1)
+            .totalRecordsInAllPages
+
+        return response > 0
+    }
+
+    /**
      * Add a file to the database.
      * @param file File to add.
      */

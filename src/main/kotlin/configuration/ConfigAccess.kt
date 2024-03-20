@@ -11,14 +11,18 @@ import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.system.exitProcess
 
-private interface ConfigModelSectionProvider
+private interface ConfigModelSectionProvider {
+    var id: String
+    var name: String
+    var type: ProviderType
+}
 
 
 @Serializable
 private data class ConfigModelSectionProviderFTP(
-    var id: String,
-    var name: String,
-    var type: ProviderType,
+    override var id: String,
+    override var name: String,
+    override var type: ProviderType,
     var username: String,
     var password: String?,
     var keyAuth: Boolean,
@@ -98,6 +102,30 @@ fun getEncryptionKey(keyIndex: Int, algorithm: EncryptionType): String {
         exitProcess(1)
     }
     return modifiedConfig.key
+}
+
+fun getEncryptionId(keyIndex: Int): String {
+    return readConfig().encryption[keyIndex].id
+}
+
+fun getEncryptionAlgorithm(keyIndex: Int): EncryptionType {
+    return readConfig().encryption[keyIndex].algorithm
+}
+
+fun getProviderIds(startNumber: Int, quantity: Int): List<String> {
+    val out: MutableList<String> = mutableListOf()
+    val providers = readConfig().providers
+    for (i in startNumber..startNumber + quantity)
+        out.add(providers[i].id)
+    return out
+}
+
+fun getProviderTypes(startNumber: Int, quantity: Int): List<ProviderType> {
+    val out: MutableList<ProviderType> = mutableListOf()
+    val providers = readConfig().providers
+    for (i in startNumber..startNumber + quantity)
+        out.add(providers[i].type)
+    return out
 }
 
 /**
