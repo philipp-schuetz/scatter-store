@@ -4,6 +4,8 @@ import com.philippschuetz.EncryptionType
 import com.philippschuetz.ProviderType
 import com.philippschuetz.getConfigPath
 import com.philippschuetz.getRandomString
+import com.philippschuetz.providers.Provider
+import com.philippschuetz.providers.ProviderFTP
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -125,6 +127,21 @@ fun getProviderTypes(startNumber: Int, quantity: Int): List<ProviderType> {
     val providers = readConfig().providers
     for (i in startNumber..startNumber + quantity)
         out.add(providers[i].type)
+    return out
+}
+
+/**
+ * Get the first x Providers in the config file.
+ * @param quantity The Number of Providers to get.
+ */
+fun getProviders(quantity: Int): List<Provider> {
+    val out: MutableList<Provider> = mutableListOf()
+    val providers = readConfig().providers
+    for (i in 0..quantity) {
+        when (val provider = providers[i]) {
+            is ConfigModelSectionProviderFTP -> out.add(ProviderFTP(provider.username, "", true, "", 1, "")) //TODO
+        }
+    }
     return out
 }
 
