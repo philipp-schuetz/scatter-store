@@ -2,15 +2,11 @@ package com.philippschuetz
 
 import com.philippschuetz.configuration.*
 import com.philippschuetz.encryption.EncryptionAES
-import com.philippschuetz.providers.ProviderFTP
 import com.philippschuetz.splitting.splitFile
 import picocli.CommandLine
 import java.nio.file.Path
 import java.util.concurrent.Callable
-import kotlin.io.path.createFile
-import kotlin.io.path.isDirectory
-import kotlin.io.path.isRegularFile
-import kotlin.io.path.name
+import kotlin.io.path.*
 import kotlin.system.exitProcess
 
 
@@ -34,6 +30,8 @@ class ScatterStore : Callable<Int> {
             getDBPath().createFile()
             DB().init()
         } else if (this::file.isInitialized) { // --upload
+            println("log1")
+            println("file exists? ${file.exists()}")
             val files: MutableList<Path> = mutableListOf()
             if (file.isDirectory()) {
                 files.addAll(listAllFiles(file))
@@ -42,36 +40,37 @@ class ScatterStore : Callable<Int> {
             } else
                 return 1
             val db = DB()
-            val encryptionNumber: Int = 0
-            val numberOfShards: Int = 2
+            val encryptionNumber = 0
+            val numberOfShards = 2
 
-            val encryptionId = getEncryptionId(encryptionNumber)
 
             for (file in files) {
                 var generatedFileId: String
                 do {
                     generatedFileId = getRandomString(8)
                 } while (db.fileIdInUse(generatedFileId))
-                val fileObj = FileTypeDB(generatedFileId, file.name, getProviderIds(0, numberOfShards), encryptionId)
                 //encrypt
                 when (getEncryptionAlgorithm(encryptionNumber)) {
                     EncryptionType.AES -> EncryptionAES().encryptFiles(listOf(file), encryptionNumber)
                 }
-                //split
+
+                // split file into shards
                 val fileShards = splitFile(file, numberOfShards, generatedFileId)
 
-                //upload
-                val providerTypes = getProviderTypes(0, numberOfShards)
-                for (provider in providerTypes) {
-                    when (provider) {
-                        ProviderType.FTP -> ProviderFTP()
-                    }
-                }
-
-
+                // upload file shards
+                val providers = getProviders(numberOfShards)
+                for (i in 0..providers.size)
+                    providers[i].upload(fileShards[i])
 
                 // on success: add file to db
-                db.addFile(fileObj)
+                db.addFile(
+                    FileTypeDB(
+                        generatedFileId,
+                        file.name,
+                        providers.map { it.id },
+                        getEncryptionId(encryptionNumber)
+                    )
+                )
             }
         }
         return 0
