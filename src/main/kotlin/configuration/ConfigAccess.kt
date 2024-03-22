@@ -114,22 +114,6 @@ fun getEncryptionAlgorithm(keyIndex: Int): EncryptionType {
     return readConfig().encryption[keyIndex].algorithm
 }
 
-fun getProviderIds(startNumber: Int, quantity: Int): List<String> {
-    val out: MutableList<String> = mutableListOf()
-    val providers = readConfig().providers
-    for (i in startNumber..startNumber + quantity)
-        out.add(providers[i].id)
-    return out
-}
-
-fun getProviderTypes(startNumber: Int, quantity: Int): List<ProviderType> {
-    val out: MutableList<ProviderType> = mutableListOf()
-    val providers = readConfig().providers
-    for (i in startNumber..startNumber + quantity)
-        out.add(providers[i].type)
-    return out
-}
-
 /**
  * Get the first x Providers in the config file.
  * @param quantity The Number of Providers to get.
@@ -139,7 +123,17 @@ fun getProviders(quantity: Int): List<Provider> {
     val providers = readConfig().providers
     for (i in 0..quantity) {
         when (val provider = providers[i]) {
-            is ConfigModelSectionProviderFTP -> out.add(ProviderFTP(provider.username, "", true, "", 1, "")) //TODO
+            is ConfigModelSectionProviderFTP -> out.add(
+                ProviderFTP(
+                    provider.id,
+                    provider.username,
+                    provider.password,
+                    provider.keyAuth,
+                    provider.remoteHost,
+                    provider.port,
+                    provider.remoteDir
+                )
+            )
         }
     }
     return out
