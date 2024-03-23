@@ -1,8 +1,8 @@
-package com.philippschuetz.encryption
+package scatterstore.encryption
 
-import com.philippschuetz.EncryptionType
-import com.philippschuetz.configuration.addEncryptionKey
-import com.philippschuetz.configuration.getEncryptionKey
+import scatterstore.EncryptionType
+import scatterstore.configuration.addEncryptionKey
+import scatterstore.configuration.getEncryptionKey
 import java.nio.file.Path
 import java.security.SecureRandom
 import java.util.*

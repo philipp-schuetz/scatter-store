@@ -1,4 +1,4 @@
-package com.philippschuetz.encryption
+package scatterstore.encryption
 
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream

@@ -1,6 +1,6 @@
-package com.philippschuetz.configuration
+package scatterstore.configuration
 
-import com.philippschuetz.getDBPath
+import scatterstore.getDBPath
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.logging.ConsoleLogger
@@ -70,10 +70,10 @@ class DB {
      */
     fun addFile(file: FileTypeDB) {
         database.insert(FilesTable) {
-            set(it.fileId, file.fileId)
-            set(it.name, file.name)
-            set(it.providerIdList, file.providerIdList.joinToString(","))
-            set(it.encryptionId, file.encryptionId)
+            set(FilesTable.fileId, file.fileId)
+            set(FilesTable.name, file.name)
+            set(FilesTable.providerIdList, file.providerIdList.joinToString(","))
+            set(FilesTable.encryptionId, file.encryptionId)
         }
     }
 

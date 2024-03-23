@@ -1,9 +1,9 @@
-package com.philippschuetz
+package scatterstore
 
-import com.philippschuetz.configuration.*
-import com.philippschuetz.encryption.EncryptionAES
-import com.philippschuetz.splitting.splitFile
+import scatterstore.encryption.EncryptionAES
+import scatterstore.splitting.splitFile
 import picocli.CommandLine
+import scatterstore.configuration.*
 import java.nio.file.Path
 import java.util.concurrent.Callable
 import kotlin.io.path.*
@@ -30,8 +30,6 @@ class ScatterStore : Callable<Int> {
             getDBPath().createFile()
             DB().init()
         } else if (this::file.isInitialized) { // --upload
-            println("log1")
-            println("file exists? ${file.exists()}")
             val files: MutableList<Path> = mutableListOf()
             if (file.isDirectory()) {
                 files.addAll(listAllFiles(file))

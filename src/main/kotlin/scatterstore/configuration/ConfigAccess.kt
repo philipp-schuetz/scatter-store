@@ -1,10 +1,10 @@
-package com.philippschuetz.configuration
+package scatterstore.configuration
 
-import com.philippschuetz.EncryptionType
-import com.philippschuetz.getConfigPath
-import com.philippschuetz.getRandomString
-import com.philippschuetz.providers.Provider
-import com.philippschuetz.providers.ProviderFTP
+import scatterstore.EncryptionType
+import scatterstore.getConfigPath
+import scatterstore.getRandomString
+import scatterstore.providers.Provider
+import scatterstore.providers.ProviderFTP
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -136,7 +136,8 @@ fun getEncryptionAlgorithm(keyIndex: Int): EncryptionType {
 fun getProviders(quantity: Int): List<Provider> {
     val out: MutableList<Provider> = mutableListOf()
     val providers = readConfig().providers
-    for (i in 0..quantity) {
+    // TODO throw error, when quantity is greater than the available providers
+    for (i in 0..<quantity) {
         when (val provider = providers[i]) {
             is ConfigModelSectionProviderFTP -> out.add(
                 ProviderFTP(
