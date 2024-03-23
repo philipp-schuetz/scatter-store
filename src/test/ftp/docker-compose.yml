@@ -1,0 +1,26 @@
+version: '3'
+services:
+  sftp1:
+    container_name: sftp1
+    image: emberstack/sftp
+    ports:
+      - '22:22'
+    volumes:
+      - './configs/sftp1.json:/app/config/sftp.json:ro'
+      - './sftp1:/home/sftp1/sftp'
+  sftp2:
+    container_name: sftp2
+    image: emberstack/sftp
+    ports:
+      - '23:23'
+    volumes:
+      - './configs/sftp2.json:/app/config/sftp.json:ro'
+      - './sftp2:/home/sftp2/sftp'
+  sftp3:
+    container_name: sftp3
+    image: emberstack/sftp
+    ports:
+      - '24:24'
+    volumes:
+      - './configs/sftp3.json:/app/config/sftp.json:ro'
+      - './sftp3:/home/sftp3/sftp'
