@@ -1,32 +1,47 @@
 package com.philippschuetz.configuration
 
 import com.philippschuetz.EncryptionType
-import com.philippschuetz.ProviderType
 import com.philippschuetz.getConfigPath
 import com.philippschuetz.getRandomString
 import com.philippschuetz.providers.Provider
 import com.philippschuetz.providers.ProviderFTP
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.*
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.system.exitProcess
 
+private object ConfigModelSectionProviderSerializer :
+    JsonContentPolymorphicSerializer<ConfigModelSectionProvider>(ConfigModelSectionProvider::class) {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ConfigModelSectionProvider> {
+        val jsonObject = element as? JsonObject
+        return when {
+            jsonObject?.containsKey("username") == true &&
+                    jsonObject.containsKey("password") &&
+                    jsonObject.containsKey("keyAuth") &&
+                    jsonObject.containsKey("remoteHost") &&
+                    jsonObject.containsKey("port") &&
+                    jsonObject.containsKey("remoteDir") -> ConfigModelSectionProviderFTP.serializer()
+
+            else -> error("Cannot determine type of ConfigModelSectionProvider")
+        }
+    }
+}
+
+@Serializable(with = ConfigModelSectionProviderSerializer::class)
 private interface ConfigModelSectionProvider {
     var id: String
     var name: String
-    var type: ProviderType
 }
-
 
 @Serializable
 private data class ConfigModelSectionProviderFTP(
     override var id: String,
     override var name: String,
-    override var type: ProviderType,
     var username: String,
-    var password: String?,
+    var password: String,
     var keyAuth: Boolean,
     var remoteHost: String,
     var port: Int,
