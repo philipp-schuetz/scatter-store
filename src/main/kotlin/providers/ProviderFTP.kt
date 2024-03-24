@@ -19,6 +19,7 @@ import kotlin.io.path.Path
  * @param remoteDir The directory on the FTP server to use.
  */
 class ProviderFTP(
+    override val id: String,
     username: String,
     password: String?,
     keyAuth: Boolean,

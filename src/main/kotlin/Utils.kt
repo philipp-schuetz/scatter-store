@@ -4,6 +4,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
+import kotlin.io.path.createDirectory
+import kotlin.io.path.notExists
 
 
 /**
@@ -19,7 +21,10 @@ fun getOperatingSystem(): String {
  * @return path to tmp folder
  */
 fun getTmpFolder(): Path {
-    return Path(System.getProperty("java.io.tmpdir"))
+    val tmpDir = Path("${System.getProperty("java.io.tmpdir")}/scatter-store")
+    if (tmpDir.notExists())
+        tmpDir.createDirectory()
+    return tmpDir
 }
 
 /**

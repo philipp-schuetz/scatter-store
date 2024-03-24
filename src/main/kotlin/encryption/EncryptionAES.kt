@@ -9,7 +9,6 @@ import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 class EncryptionAES : EncryptionAbstract() {
@@ -35,8 +34,8 @@ class EncryptionAES : EncryptionAbstract() {
 
             val data = secretKey.encoded
             val secretKeySpec = SecretKeySpec(data, 0, data.size, "AES")
-            val cipher = Cipher.getInstance("AES", "BC")
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, IvParameterSpec(ByteArray(cipher.blockSize)))
+            val cipher = Cipher.getInstance("AES")
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
             val encodedData = cipher.doFinal(fileData)
 
             saveFile(encodedData, filePath)
@@ -49,8 +48,8 @@ class EncryptionAES : EncryptionAbstract() {
             val secretKey = getSecretKey(keyIndex)
 
             val decrypted: ByteArray
-            val cipher = Cipher.getInstance("AES", "BC")
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(ByteArray(cipher.blockSize)))
+            val cipher = Cipher.getInstance("AES")
+            cipher.init(Cipher.DECRYPT_MODE, secretKey)
             decrypted = cipher.doFinal(fileData)
 
             saveFile(decrypted, filePath)

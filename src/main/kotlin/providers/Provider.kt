@@ -3,6 +3,8 @@ package com.philippschuetz.providers
 import java.nio.file.Path
 
 interface Provider {
+    val id: String
+
     /**
      * Uploads a file to the provider.
      *
