@@ -16,7 +16,6 @@ class DB {
     )
 
     object FilesTable : Table<Nothing>("t_file") {
-        val id = int("id").primaryKey()
         val fileId = varchar("file_id")
         val name = varchar("name")
         val providerIdList = varchar("provider_id_list")
@@ -30,7 +29,6 @@ class DB {
         database.useConnection { conn ->
             val sql = """
                 create table t_file (
-                    id int,
                     file_id varchar(8),
                     name varchar(255),
                     provider_id_list varchar(255),
