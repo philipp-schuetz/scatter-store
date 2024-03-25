@@ -31,7 +31,6 @@ class ProviderFTP(
     private fun createSession(): Session{
         val jsch = JSch()
         val session: Session
-        println(1)
         if (!keyAuth) {
             session = jsch.getSession(username, remoteHost, port)
             session.setPassword(password)

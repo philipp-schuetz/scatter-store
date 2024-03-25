@@ -57,7 +57,7 @@ class ScatterStore : Callable<Int> {
 
                 // upload file shards
                 val providers = getProviders(numberOfShards)
-                for (i in 0..providers.size)
+                for (i in providers.indices)
                     providers[i].upload(fileShards[i])
 
                 // on success: add file to db
