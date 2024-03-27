@@ -12,7 +12,7 @@ services:
     container_name: sftp2
     image: emberstack/sftp
     ports:
-      - '23:23'
+      - '23:22'
     volumes:
       - './configs/sftp2.json:/app/config/sftp.json:ro'
       - './sftp2:/home/sftp2/sftp'
@@ -20,7 +20,7 @@ services:
     container_name: sftp3
     image: emberstack/sftp
     ports:
-      - '24:24'
+      - '24:22'
     volumes:
       - './configs/sftp3.json:/app/config/sftp.json:ro'
       - './sftp3:/home/sftp3/sftp'
