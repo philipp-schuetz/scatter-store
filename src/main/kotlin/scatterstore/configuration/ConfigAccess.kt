@@ -156,6 +156,30 @@ fun getProviders(quantity: Int): List<Provider> {
 }
 
 /**
+ * Get a provider by its unique identifier.
+ * @param providerId Unique identifier of a provider.
+ */
+fun getProviderById(providerId: String): Provider {
+    val providers = readConfig().providers
+    for (i in providers.indices) {
+        if (providers[i].id == providerId) {
+            when (val provider = providers[i]) {
+                is ConfigModelSectionProviderFTP -> return ProviderFTP(
+                    provider.id,
+                    provider.username,
+                    provider.password,
+                    provider.keyAuth,
+                    provider.remoteHost,
+                    provider.port,
+                    provider.remoteDir
+                )
+            }
+        }
+    }
+    throw Exception("provider Id not found")
+}
+
+/**
  * Write an empty config file.
  */
 fun initConfig() {
