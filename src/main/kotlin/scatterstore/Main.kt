@@ -88,6 +88,7 @@ class ScatterStore : Callable<Int> {
 
     private fun download(): Int {
         val db = DB()
+        val encryptionNumber = 0
         // get file information
         val file = db.getFileByFileId(fileIdDownload)
 
@@ -103,7 +104,12 @@ class ScatterStore : Callable<Int> {
         }
 
         // put file shards back together
-        joinFiles(file.fileId, fileShards.size, Path(file.name))
+        joinFiles(file.fileId, fileShards.size)
+
+        //encrypt
+        when (getEncryptionAlgorithm(encryptionNumber)) {
+            EncryptionType.AES -> EncryptionAES().decryptFiles(listOf(Path("${getTmpFolder()}/${file.fileId}")), 0)
+        }
 
         return 0
     }
