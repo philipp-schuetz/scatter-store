@@ -1,8 +1,11 @@
-package com.philippschuetz
+package scatterstore
 
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
+import kotlin.io.path.createDirectory
+import kotlin.io.path.notExists
 
 
 /**
@@ -18,7 +21,10 @@ fun getOperatingSystem(): String {
  * @return path to tmp folder
  */
 fun getTmpFolder(): Path {
-    return Path(System.getProperty("java.io.tmpdir"))
+    val tmpDir = Path("${System.getProperty("java.io.tmpdir")}/scatter-store")
+    if (tmpDir.notExists())
+        tmpDir.createDirectory()
+    return tmpDir
 }
 
 /**
@@ -36,6 +42,13 @@ fun getConfigPath(): Path {
 }
 
 /**
+ * Get the path to use for the database file. Supports multiple operating systems.
+ */
+fun getDBPath(): Path {
+    return Path("${getDataFolder()}/scatter-store.sqlite")
+}
+
+/**
  * Get a random String from a-zA-Z0-9.
  * @param length Specify the length of the generated String.
  */
@@ -45,4 +58,16 @@ fun getRandomString(length: Int): String {
         .map { kotlin.random.Random.nextInt(0, charPool.size) }
         .map(charPool::get)
         .joinToString("")
+}
+
+/**
+ * This function takes a directory path as input and returns a list of all files within that directory and its subdirectories.
+ *
+ * @param dir The path of the directory to be scanned.
+ * @return A list of paths of all files within the specified directory and its subdirectories.
+ */
+fun listAllFiles(dir: Path): List<Path> {
+    return Files.walk(dir)
+        .filter { Files.isRegularFile(it) }
+        .toList()
 }
