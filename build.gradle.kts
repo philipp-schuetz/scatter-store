@@ -15,7 +15,7 @@ dependencies {
 
     implementation("info.picocli:picocli:4.7.5")
 
-    implementation("com.hierynomus:sshj:0.38.0")
+    implementation("com.github.mwiede:jsch:0.2.17")
 
     implementation("org.ktorm:ktorm-core:3.6.0")
     implementation("org.ktorm:ktorm-support-sqlite:3.6.0")

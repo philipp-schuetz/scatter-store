@@ -1,6 +1,6 @@
-package com.philippschuetz.splitting
+package scatterstore.splitting
 
-import com.philippschuetz.getTmpFolder
+import scatterstore.getTmpFolder
 import java.nio.file.Path
 import kotlin.io.path.fileSize
 import kotlin.io.path.inputStream

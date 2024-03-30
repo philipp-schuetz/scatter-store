@@ -1,6 +1,6 @@
-package com.philippschuetz.configuration
+package scatterstore.configuration
 
-import com.philippschuetz.getDBPath
+import scatterstore.getDBPath
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.logging.ConsoleLogger
@@ -16,7 +16,6 @@ class DB {
     )
 
     object FilesTable : Table<Nothing>("t_file") {
-        val id = int("id").primaryKey()
         val fileId = varchar("file_id")
         val name = varchar("name")
         val providerIdList = varchar("provider_id_list")
@@ -30,7 +29,6 @@ class DB {
         database.useConnection { conn ->
             val sql = """
                 create table t_file (
-                    id int,
                     file_id varchar(8),
                     name varchar(255),
                     provider_id_list varchar(255),
@@ -70,10 +68,10 @@ class DB {
      */
     fun addFile(file: FileTypeDB) {
         database.insert(FilesTable) {
-            set(it.fileId, file.fileId)
-            set(it.name, file.name)
-            set(it.providerIdList, file.providerIdList.joinToString(","))
-            set(it.encryptionId, file.encryptionId)
+            set(FilesTable.fileId, file.fileId)
+            set(FilesTable.name, file.name)
+            set(FilesTable.providerIdList, file.providerIdList.joinToString(","))
+            set(FilesTable.encryptionId, file.encryptionId)
         }
     }
 
