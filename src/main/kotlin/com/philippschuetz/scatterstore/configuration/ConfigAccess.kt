@@ -1,10 +1,10 @@
-package scatterstore.configuration
+package com.philippschuetz.scatterstore.configuration
 
-import scatterstore.EncryptionType
-import scatterstore.getConfigPath
-import scatterstore.getRandomString
-import scatterstore.providers.Provider
-import scatterstore.providers.ProviderFTP
+import com.philippschuetz.scatterstore.EncryptionType
+import com.philippschuetz.scatterstore.getConfigPath
+import com.philippschuetz.scatterstore.getRandomString
+import com.philippschuetz.scatterstore.providers.Provider
+import com.philippschuetz.scatterstore.providers.ProviderFTP
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString

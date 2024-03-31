@@ -1,6 +1,6 @@
-package scatterstore.configuration
+package com.philippschuetz.scatterstore.configuration
 
-import scatterstore.getDBPath
+import com.philippschuetz.scatterstore.getDBPath
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.logging.ConsoleLogger

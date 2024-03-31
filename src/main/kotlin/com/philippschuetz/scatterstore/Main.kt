@@ -1,11 +1,11 @@
-package scatterstore
+package com.philippschuetz.scatterstore
 
-import scatterstore.encryption.EncryptionAES
-import scatterstore.splitting.splitFile
+import com.philippschuetz.scatterstore.configuration.*
+import com.philippschuetz.scatterstore.encryption.EncryptionAES
+import com.philippschuetz.scatterstore.splitting.splitFile
 import picocli.CommandLine
-import scatterstore.configuration.*
-import scatterstore.providers.Provider
-import scatterstore.splitting.joinFiles
+import com.philippschuetz.scatterstore.providers.Provider
+import com.philippschuetz.scatterstore.splitting.joinFiles
 import java.nio.file.Path
 import java.util.concurrent.Callable
 import kotlin.io.path.*
