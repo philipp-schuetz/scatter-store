@@ -2,7 +2,6 @@ package com.philippschuetz.scatterstore.encryption
 
 import com.philippschuetz.scatterstore.EncryptionType
 import com.philippschuetz.scatterstore.configuration.addEncryptionKey
-import com.philippschuetz.scatterstore.configuration.getEncryptionKey
 import java.nio.file.Path
 import java.security.SecureRandom
 import java.util.*
@@ -11,7 +10,9 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-class EncryptionAES : EncryptionAbstract() {
+class EncryptionAES(encryptionKey: String) : EncryptionAbstract() {
+
+    private val secretKey: SecretKey = SecretKeySpec(Base64.getDecoder().decode(encryptionKey), "AES")
 
     override fun generateKey() {
         val secureRandom = SecureRandom()
@@ -23,14 +24,10 @@ class EncryptionAES : EncryptionAbstract() {
         addEncryptionKey(EncryptionType.AES, encodedKey)
     }
 
-    override fun getSecretKey(keyIndex: Int): SecretKey {
-        return SecretKeySpec(Base64.getDecoder().decode(getEncryptionKey(keyIndex, EncryptionType.AES)), "AES")
-    }
-
-    override fun encryptFiles(inputFiles: List<Path>, keyIndex: Int) {
-        for (filePath in inputFiles) {
-            val fileData = readFile(filePath)
-            val secretKey = getSecretKey(keyIndex)
+    override fun encryptFiles(inputFiles: List<Path>, outputPaths: List<Path>) {
+        if (inputFiles.size != outputPaths.size) throw Exception("same length required for input and output files")
+        for (i in 0 .. inputFiles.size) {
+            val fileData = readFile(inputFiles[i])
 
             val data = secretKey.encoded
             val secretKeySpec = SecretKeySpec(data, 0, data.size, "AES")
@@ -38,21 +35,21 @@ class EncryptionAES : EncryptionAbstract() {
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
             val encodedData = cipher.doFinal(fileData)
 
-            saveFile(encodedData, filePath)
+            saveFile(encodedData, outputPaths[i])
         }
     }
 
-    override fun decryptFiles(inputFiles: List<Path>, keyIndex: Int) {
-        for (filePath in inputFiles) {
-            val fileData = readFile(filePath)
-            val secretKey = getSecretKey(keyIndex)
+    override fun decryptFiles(inputFiles: List<Path>, outputPaths: List<Path>) {
+        if (inputFiles.size != outputPaths.size) throw Exception("same length required for input and output files")
+        for (i in 0 .. inputFiles.size) {
+            val fileData = readFile(inputFiles[i])
 
             val decrypted: ByteArray
             val cipher = Cipher.getInstance("AES")
             cipher.init(Cipher.DECRYPT_MODE, secretKey)
             decrypted = cipher.doFinal(fileData)
 
-            saveFile(decrypted, filePath)
+            saveFile(decrypted, outputPaths[i])
         }
     }
 }

@@ -16,14 +16,6 @@ abstract class EncryptionAbstract {
     abstract fun generateKey()
 
     /**
-     * Retrieves the encryption key from config and converts it to.
-     * @param keyIndex The index in the config file of the key to retrieve.
-     * @return The secret key corresponding to the provided index.
-     */
-    abstract fun getSecretKey(keyIndex: Int): SecretKey
-
-
-    /**
      * Saves the provided file data to the specified file path.
      * @param fileData The data to be saved to the file.
      * @param filePath The path where the file should be saved.
@@ -53,14 +45,14 @@ abstract class EncryptionAbstract {
     /**
      * Encrypts the files at the provided paths using the key at the specified index.
      * @param inputFiles The paths of the files to encrypt.
-     * @param keyIndex The index in the config file of the key to retrieve.
+     * @param outputPaths Define output paths for encrypted files.
      */
-    abstract fun encryptFiles(inputFiles: List<Path>, keyIndex: Int)
+    abstract fun encryptFiles(inputFiles: List<Path>, outputPaths: List<Path>)
 
     /**
      * Decrypts the files at the provided paths using the key at the specified index.
      * @param inputFiles The paths of the files to decrypt.
-     * @param keyIndex The index in the config file of the key to retrieve.
+     * @param outputPaths Define output paths for encrypted files.
      */
-    abstract fun decryptFiles(inputFiles: List<Path>, keyIndex: Int)
+    abstract fun decryptFiles(inputFiles: List<Path>, outputPaths: List<Path>)
 }
