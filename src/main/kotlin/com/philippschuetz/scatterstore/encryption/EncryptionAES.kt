@@ -10,11 +10,19 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
-class EncryptionAES(encryptionKey: String) : EncryptionAbstract() {
+class EncryptionAES(encryptionKey: String?) : EncryptionAbstract() {
 
-    private val secretKey: SecretKey = SecretKeySpec(Base64.getDecoder().decode(encryptionKey), "AES")
+    private val secretKey: SecretKey
 
-    override fun generateKey() {
+    init {
+        if (encryptionKey != null) {
+            secretKey = SecretKeySpec(Base64.getDecoder().decode(encryptionKey), "AES")
+        } else {
+            secretKey = SecretKeySpec(Base64.getDecoder().decode(generateKey()), "AES")
+        }
+    }
+
+    override fun generateKey(): String {
         val secureRandom = SecureRandom()
         val keyGenerator = KeyGenerator.getInstance("AES")
         keyGenerator?.init(256, secureRandom)
@@ -22,6 +30,7 @@ class EncryptionAES(encryptionKey: String) : EncryptionAbstract() {
 
         val encodedKey: String = Base64.getEncoder().encodeToString(secretKey!!.encoded)
         addEncryptionKey(EncryptionType.AES, encodedKey)
+        return encodedKey
     }
 
     override fun encryptFiles(inputFiles: List<Path>, outputPaths: List<Path>) {

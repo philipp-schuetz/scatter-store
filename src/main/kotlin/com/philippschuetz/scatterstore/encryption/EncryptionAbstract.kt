@@ -4,7 +4,6 @@ import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.nio.file.Path
 
-import javax.crypto.SecretKey
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
 import kotlin.io.path.readBytes
@@ -13,7 +12,7 @@ abstract class EncryptionAbstract {
     /**
      * Generates a key for encryption and writes it to the config file.
      */
-    abstract fun generateKey()
+    abstract fun generateKey(): String
 
     /**
      * Saves the provided file data to the specified file path.
