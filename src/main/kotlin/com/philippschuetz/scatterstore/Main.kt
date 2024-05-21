@@ -19,8 +19,14 @@ import kotlin.system.exitProcess
 )
 class ScatterStore : Callable<Int> {
 
-    @CommandLine.Option(names = ["--init"], description = ["Create config and Database."])
+    @CommandLine.Option(names = ["--init"], description = ["Create config and database."])
     private var initialize: Boolean = false
+
+    @CommandLine.Option(
+        names = ["--forceinit"],
+        description = ["Same as --init but forces file creation (Warning: All stored application data is lost)"]
+    )
+    private var forceInitialize: Boolean = false
 
     @CommandLine.Option(names = ["--upload"], description = ["Upload a file. (Directory or File)"])
     private lateinit var fileUpload: Path
@@ -31,8 +37,20 @@ class ScatterStore : Callable<Int> {
     override fun call(): Int {
         if (initialize) { // --init
             // create an empty config file with an AES Key, create a database file and add db structure
+            if (!getConfigPath().exists()) {
+                initConfig()
+                EncryptionAES(null)
+            } else
+                println("Config file was not initialized, because it already exists")
+            if (!getDBPath().exists()) {
+                getDBPath().createFile()
+                DB().init()
+            } else
+                println("Config file was not initialized, because it already exists")
+        } else if (forceInitialize) { // --forceinit
             initConfig()
             EncryptionAES(null)
+            getDBPath().deleteIfExists()
             getDBPath().createFile()
             DB().init()
         } else if (this::fileUpload.isInitialized) { // --upload
@@ -60,7 +78,10 @@ class ScatterStore : Callable<Int> {
             val generatedFileId = UUID.randomUUID().toString()
             //encrypt
             when (getEncryptionAlgorithm(encryptionNumber)) {
-                EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).encryptFiles(listOf(file), listOf(file))
+                EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).encryptFiles(
+                    listOf(file),
+                    listOf(file)
+                )
             }
 
             // split file into shards
@@ -98,7 +119,7 @@ class ScatterStore : Callable<Int> {
 
         val fileShards: MutableList<Path> = mutableListOf()
         for (i in 0..<providers.size) {
-            fileShards.add(providers[i].download(file.fileId, i+1))
+            fileShards.add(providers[i].download(file.fileId, i + 1))
         }
 
         // put file shards back together
@@ -108,8 +129,10 @@ class ScatterStore : Callable<Int> {
 
         //decrypt
         when (getEncryptionAlgorithm(encryptionNumber)) {
-            // TODO get original file name and number of shards to get list of output paths
-            EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).decryptFiles(inputPaths, outputPaths)
+            EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).decryptFiles(
+                inputPaths,
+                outputPaths
+            )
         }
 
         return 0
