@@ -1,9 +1,9 @@
-package scatterstore.providers
+package com.philippschuetz.scatterstore.providers
 
 import com.jcraft.jsch.ChannelSftp
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
-import scatterstore.getTmpFolder
+import com.philippschuetz.scatterstore.getTmpFolder
 import java.nio.file.Path
 import kotlin.io.path.Path
 

@@ -1,14 +1,14 @@
-package scatterstore.configuration
+package com.philippschuetz.scatterstore.configuration
 
-import scatterstore.EncryptionType
-import scatterstore.getConfigPath
-import scatterstore.getRandomString
-import scatterstore.providers.Provider
-import scatterstore.providers.ProviderFTP
+import com.philippschuetz.scatterstore.EncryptionType
+import com.philippschuetz.scatterstore.getConfigPath
+import com.philippschuetz.scatterstore.providers.Provider
+import com.philippschuetz.scatterstore.providers.ProviderFTP
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import java.util.UUID
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlin.system.exitProcess
@@ -97,12 +97,8 @@ private fun <T> idInList(list: List<T>, id: String, idExtractor: (T) -> String):
  */
 fun addEncryptionKey(algorithm: EncryptionType, key: String) {
     val modifiedConfig = readConfig()
-    var generatedId: String
-    do {
-        generatedId = getRandomString(8)
-    } while (idInList(modifiedConfig.encryption, generatedId) { it.id })
 
-    modifiedConfig.encryption += ConfigModelSectionEncryption(generatedId, algorithm, key)
+    modifiedConfig.encryption += ConfigModelSectionEncryption(UUID.randomUUID().toString(), algorithm, key)
     writeConfig(modifiedConfig)
 }
 
