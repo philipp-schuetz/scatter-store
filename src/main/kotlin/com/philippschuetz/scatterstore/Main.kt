@@ -1,12 +1,13 @@
-package scatterstore
+package com.philippschuetz.scatterstore
 
-import scatterstore.encryption.EncryptionAES
-import scatterstore.splitting.splitFile
+import com.philippschuetz.scatterstore.configuration.*
+import com.philippschuetz.scatterstore.encryption.EncryptionAES
+import com.philippschuetz.scatterstore.splitting.splitFile
 import picocli.CommandLine
-import scatterstore.configuration.*
-import scatterstore.providers.Provider
-import scatterstore.splitting.joinFiles
+import com.philippschuetz.scatterstore.providers.Provider
+import com.philippschuetz.scatterstore.splitting.joinFiles
 import java.nio.file.Path
+import java.util.UUID
 import java.util.concurrent.Callable
 import kotlin.io.path.*
 import kotlin.system.exitProcess
@@ -18,8 +19,14 @@ import kotlin.system.exitProcess
 )
 class ScatterStore : Callable<Int> {
 
-    @CommandLine.Option(names = ["--init"], description = ["Create config and Database."])
+    @CommandLine.Option(names = ["--init"], description = ["Create config and database."])
     private var initialize: Boolean = false
+
+    @CommandLine.Option(
+        names = ["--forceinit"],
+        description = ["Same as --init but forces file creation (Warning: All stored application data is lost)"]
+    )
+    private var forceInitialize: Boolean = false
 
     @CommandLine.Option(names = ["--upload"], description = ["Upload a file. (Directory or File)"])
     private lateinit var fileUpload: Path
@@ -30,8 +37,20 @@ class ScatterStore : Callable<Int> {
     override fun call(): Int {
         if (initialize) { // --init
             // create an empty config file with an AES Key, create a database file and add db structure
+            if (!getConfigPath().exists()) {
+                initConfig()
+                EncryptionAES(null)
+            } else
+                println("Config file was not initialized, because it already exists")
+            if (!getDBPath().exists()) {
+                getDBPath().createFile()
+                DB().init()
+            } else
+                println("Config file was not initialized, because it already exists")
+        } else if (forceInitialize) { // --forceinit
             initConfig()
-            EncryptionAES().generateKey()
+            EncryptionAES(null)
+            getDBPath().deleteIfExists()
             getDBPath().createFile()
             DB().init()
         } else if (this::fileUpload.isInitialized) { // --upload
@@ -56,13 +75,13 @@ class ScatterStore : Callable<Int> {
 
 
         for (file in files) {
-            var generatedFileId: String
-            do {
-                generatedFileId = getRandomString(8)
-            } while (db.fileIdInUse(generatedFileId))
+            val generatedFileId = UUID.randomUUID().toString()
             //encrypt
             when (getEncryptionAlgorithm(encryptionNumber)) {
-                EncryptionType.AES -> EncryptionAES().encryptFiles(listOf(file), encryptionNumber)
+                EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).encryptFiles(
+                    listOf(file),
+                    listOf(file)
+                )
             }
 
             // split file into shards
@@ -100,15 +119,20 @@ class ScatterStore : Callable<Int> {
 
         val fileShards: MutableList<Path> = mutableListOf()
         for (i in 0..<providers.size) {
-            fileShards.add(providers[i].download(file.fileId, i+1))
+            fileShards.add(providers[i].download(file.fileId, i + 1))
         }
 
         // put file shards back together
         joinFiles(file.fileId, fileShards.size)
+        val inputPaths = listOf(Path("${getTmpFolder()}/${file.fileId}"))
+        val outputPaths = listOf(Path(file.name))
 
-        //encrypt
+        //decrypt
         when (getEncryptionAlgorithm(encryptionNumber)) {
-            EncryptionType.AES -> EncryptionAES().decryptFiles(listOf(Path("${getTmpFolder()}/${file.fileId}")), 0)
+            EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).decryptFiles(
+                inputPaths,
+                outputPaths
+            )
         }
 
         return 0

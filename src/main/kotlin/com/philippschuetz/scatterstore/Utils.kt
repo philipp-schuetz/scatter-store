@@ -1,4 +1,4 @@
-package scatterstore
+package com.philippschuetz.scatterstore
 
 import java.nio.file.Files
 import java.nio.file.Path
