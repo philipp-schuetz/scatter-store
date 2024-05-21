@@ -35,7 +35,7 @@ class EncryptionAES(encryptionKey: String?) : EncryptionAbstract() {
 
     override fun encryptFiles(inputFiles: List<Path>, outputPaths: List<Path>) {
         if (inputFiles.size != outputPaths.size) throw Exception("same length required for input and output files")
-        for (i in 0 .. inputFiles.size) {
+        for (i in inputFiles.indices) {
             val fileData = readFile(inputFiles[i])
 
             val data = secretKey.encoded
@@ -50,7 +50,7 @@ class EncryptionAES(encryptionKey: String?) : EncryptionAbstract() {
 
     override fun decryptFiles(inputFiles: List<Path>, outputPaths: List<Path>) {
         if (inputFiles.size != outputPaths.size) throw Exception("same length required for input and output files")
-        for (i in 0 .. inputFiles.size) {
+        for (i in inputFiles.indices) {
             val fileData = readFile(inputFiles[i])
 
             val decrypted: ByteArray
