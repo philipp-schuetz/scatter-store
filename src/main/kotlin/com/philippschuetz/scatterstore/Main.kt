@@ -7,6 +7,7 @@ import picocli.CommandLine
 import com.philippschuetz.scatterstore.providers.Provider
 import com.philippschuetz.scatterstore.splitting.joinFiles
 import java.nio.file.Path
+import java.util.UUID
 import java.util.concurrent.Callable
 import kotlin.io.path.*
 import kotlin.system.exitProcess
@@ -31,7 +32,7 @@ class ScatterStore : Callable<Int> {
         if (initialize) { // --init
             // create an empty config file with an AES Key, create a database file and add db structure
             initConfig()
-            EncryptionAES().generateKey()
+            EncryptionAES(null)
             getDBPath().createFile()
             DB().init()
         } else if (this::fileUpload.isInitialized) { // --upload
@@ -56,13 +57,10 @@ class ScatterStore : Callable<Int> {
 
 
         for (file in files) {
-            var generatedFileId: String
-            do {
-                generatedFileId = getRandomString(8)
-            } while (db.fileIdInUse(generatedFileId))
+            val generatedFileId = UUID.randomUUID().toString()
             //encrypt
             when (getEncryptionAlgorithm(encryptionNumber)) {
-                EncryptionType.AES -> EncryptionAES().encryptFiles(listOf(file), encryptionNumber)
+                EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).encryptFiles(listOf(file), listOf(file))
             }
 
             // split file into shards
@@ -105,10 +103,13 @@ class ScatterStore : Callable<Int> {
 
         // put file shards back together
         joinFiles(file.fileId, fileShards.size)
+        val inputPaths = listOf(Path("${getTmpFolder()}/${file.fileId}"))
+        val outputPaths = listOf(Path(file.name))
 
-        //encrypt
+        //decrypt
         when (getEncryptionAlgorithm(encryptionNumber)) {
-            EncryptionType.AES -> EncryptionAES().decryptFiles(listOf(Path("${getTmpFolder()}/${file.fileId}")), 0)
+            // TODO get original file name and number of shards to get list of output paths
+            EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).decryptFiles(inputPaths, outputPaths)
         }
 
         return 0
