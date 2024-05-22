@@ -17,13 +17,13 @@ import kotlin.io.path.Path
  * @param fileId The ID of the file to be split (used for naming).
  * @return A list of paths to the split files.
  */
-private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: String): List<Path> {
+private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: String, outputDir: Path): List<Path> {
     val listOfSplitFiles: MutableList<Path> = ArrayList()
     inputFile.inputStream().use { `in` ->
         val buffer = ByteArray(maxSizeOfSplitFiles)
         var dataRead = `in`.read(buffer)
         while (dataRead > -1) {
-            val splitFile = getSplitFile(fileId, buffer, dataRead, listOfSplitFiles.size + 1)
+            val splitFile = getSplitFile(fileId, buffer, dataRead, listOfSplitFiles.size + 1, outputDir)
             listOfSplitFiles.add(splitFile)
             dataRead = `in`.read(buffer)
         }
@@ -41,7 +41,7 @@ private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: S
  * @param fileNumber The number of the split file (used for naming).
  * @return The path to the split file.
  */
-private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int): Path {
+private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int, outputDir: Path): Path {
     val splitFileT = Path("${getTmpFolder()}/$fileId-$fileNumber")
     splitFileT.outputStream().use { fos ->
         fos.write(buffer, 0, length)
@@ -80,6 +80,6 @@ private fun getSizeInBytes(inputFileSizeInBytes: Long, numberOfFiles: Int): Int 
  * @param fileId The ID of the split files (used for naming the output files).
  * @return A list of paths to the split files.
  */
-fun splitFile(inputFile: Path, numberOfFiles: Int, fileId: String): List<Path> {
-    return splitByFileSize(inputFile, getSizeInBytes(inputFile.fileSize(), numberOfFiles), fileId)
+fun splitFile(inputFile: Path, numberOfFiles: Int, fileId: String, outputDir: Path = getTmpFolder()): List<Path> {
+    return splitByFileSize(inputFile, getSizeInBytes(inputFile.fileSize(), numberOfFiles), fileId, outputDir)
 }
