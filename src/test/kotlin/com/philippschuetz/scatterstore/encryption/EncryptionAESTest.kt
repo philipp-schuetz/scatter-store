@@ -56,8 +56,7 @@ class EncryptionAESTest {
         encryptionAES.encryptFiles(toEncrypt, encrypted)
 
         for (i in toEncrypt.indices) {
-            if (!areFilesIdentical(encrypted[i], toDecrypt[i]))
-                throw Error("files ${encrypted[i].fileName} and ${toDecrypt[i].fileName} do not match")
+            assertTrue(areFilesIdentical(encrypted[i], toDecrypt[i]))
         }
     }
 
@@ -67,8 +66,7 @@ class EncryptionAESTest {
         encryptionAES.decryptFiles(toDecrypt, decrypted)
 
         for (i in toDecrypt.indices) {
-            if (!areFilesIdentical(decrypted[i], toEncrypt[i]))
-                throw Error("files ${decrypted[i].fileName} and ${toEncrypt[i].fileName} do not match")
+            assertTrue(areFilesIdentical(decrypted[i], toEncrypt[i]))
         }
     }
 
