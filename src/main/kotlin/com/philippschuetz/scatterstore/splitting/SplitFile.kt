@@ -42,7 +42,7 @@ private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: S
  * @return The path to the split file.
  */
 private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int, outputDir: Path): Path {
-    val splitFileT = Path("${getTmpFolder()}/$fileId-$fileNumber")
+    val splitFileT = Path("${outputDir}/$fileId-$fileNumber")
     splitFileT.outputStream().use { fos ->
         fos.write(buffer, 0, length)
     }
