@@ -40,3 +40,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Project Specific ###
+scatter-store.sqlite
+scatter-store.json
