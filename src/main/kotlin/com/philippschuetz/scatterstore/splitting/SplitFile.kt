@@ -15,6 +15,7 @@ import kotlin.io.path.Path
  * @param inputFile The file to be split.
  * @param maxSizeOfSplitFiles The maximum combined size of the split files.
  * @param fileId The ID of the file to be split (used for naming).
+ * @param outputDir Directory to output the file shards to.
  * @return A list of paths to the split files.
  */
 private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: String, outputDir: Path): List<Path> {
@@ -39,6 +40,7 @@ private fun splitByFileSize(inputFile: Path, maxSizeOfSplitFiles: Int, fileId: S
  * @param buffer The buffer containing the data to be written to the split file.
  * @param length The length of the data to be written.
  * @param fileNumber The number of the split file (used for naming).
+ * @param outputDir Directory to output the file shards to.
  * @return The path to the split file.
  */
 private fun getSplitFile(fileId: String, buffer: ByteArray, length: Int, fileNumber: Int, outputDir: Path): Path {
@@ -78,6 +80,7 @@ private fun getSizeInBytes(inputFileSizeInBytes: Long, numberOfFiles: Int): Int 
  * @param inputFile The file to be split.
  * @param numberOfFiles The number of files to split the input file into.
  * @param fileId The ID of the split files (used for naming the output files).
+ * @param outputDir Directory to output the file shards to. Set to tmp directory by default.
  * @return A list of paths to the split files.
  */
 fun splitFile(inputFile: Path, numberOfFiles: Int, fileId: String, outputDir: Path = getTmpFolder()): List<Path> {
