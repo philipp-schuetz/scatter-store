@@ -2,6 +2,7 @@ package com.philippschuetz.scatterstore
 
 import com.philippschuetz.scatterstore.configuration.*
 import com.philippschuetz.scatterstore.encryption.EncryptionAES
+import com.philippschuetz.scatterstore.encryption.EncryptionAbstract
 import com.philippschuetz.scatterstore.splitting.splitFile
 import picocli.CommandLine
 import com.philippschuetz.scatterstore.providers.Provider
@@ -76,13 +77,17 @@ class ScatterStore : Callable<Int> {
 
         for (file in files) {
             val generatedFileId = UUID.randomUUID().toString()
-            //encrypt
+
+            val encryption: EncryptionAbstract
             when (getEncryptionAlgorithm(encryptionNumber)) {
-                EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).encryptFiles(
-                    listOf(file),
-                    listOf(file)
-                )
+                EncryptionType.AES -> encryption = EncryptionAES(getEncryptionKey(0, EncryptionType.AES))
             }
+
+            //encrypt
+            encryption.encryptFiles(
+                listOf(file),
+                listOf(file)
+            )
 
             // split file into shards
             val fileShards = splitFile(file, numberOfShards, generatedFileId)
@@ -127,13 +132,16 @@ class ScatterStore : Callable<Int> {
         val inputPaths = listOf(Path("${getTmpFolder()}/${file.fileId}"))
         val outputPaths = listOf(Path(file.name))
 
-        //decrypt
+        val encryption: EncryptionAbstract
         when (getEncryptionAlgorithm(encryptionNumber)) {
-            EncryptionType.AES -> EncryptionAES(getEncryptionKey(0, EncryptionType.AES)).decryptFiles(
-                inputPaths,
-                outputPaths
-            )
+            EncryptionType.AES -> encryption = EncryptionAES(getEncryptionKey(0, EncryptionType.AES))
         }
+
+        //decrypt
+        encryption.decryptFiles(
+            inputPaths,
+            outputPaths
+        )
 
         return 0
     }
