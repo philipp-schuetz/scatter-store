@@ -1,13 +1,12 @@
 package com.philippschuetz.scatterstore.encryption
 
+import com.philippschuetz.scatterstore.areFilesIdentical
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import java.nio.file.Path
 import kotlin.io.path.Path
-import java.nio.file.Files
 import kotlin.io.path.deleteExisting
 import kotlin.io.path.exists
 
@@ -31,10 +30,6 @@ class EncryptionAESTest {
         Path(encryptionResourcesBasePath + "decrypted-1.txt"),
         Path(encryptionResourcesBasePath + "decrypted-2.txt")
     )
-
-    private fun areFilesIdentical(file1: Path, file2: Path): Boolean {
-        return Files.readAllBytes(file1).contentEquals(Files.readAllBytes(file2))
-    }
 
     @BeforeEach
     fun setUp() {
