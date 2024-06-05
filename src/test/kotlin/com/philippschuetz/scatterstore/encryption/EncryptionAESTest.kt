@@ -1,14 +1,12 @@
 package com.philippschuetz.scatterstore.encryption
 
-import org.junit.jupiter.api.AfterAll
+import com.philippschuetz.scatterstore.areFilesIdentical
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import java.nio.file.Path
 import kotlin.io.path.Path
-import java.nio.file.Files
 import kotlin.io.path.deleteExisting
 import kotlin.io.path.exists
 
@@ -33,10 +31,6 @@ class EncryptionAESTest {
         Path(encryptionResourcesBasePath + "decrypted-2.txt")
     )
 
-    private fun areFilesIdentical(file1: Path, file2: Path): Boolean {
-        return Files.readAllBytes(file1).contentEquals(Files.readAllBytes(file2))
-    }
-
     @BeforeEach
     fun setUp() {
 
@@ -56,8 +50,7 @@ class EncryptionAESTest {
         encryptionAES.encryptFiles(toEncrypt, encrypted)
 
         for (i in toEncrypt.indices) {
-            if (!areFilesIdentical(encrypted[i], toDecrypt[i]))
-                throw Error("files ${encrypted[i].fileName} and ${toDecrypt[i].fileName} do not match")
+            assertTrue(areFilesIdentical(encrypted[i], toDecrypt[i]))
         }
     }
 
@@ -67,8 +60,7 @@ class EncryptionAESTest {
         encryptionAES.decryptFiles(toDecrypt, decrypted)
 
         for (i in toDecrypt.indices) {
-            if (!areFilesIdentical(decrypted[i], toEncrypt[i]))
-                throw Error("files ${decrypted[i].fileName} and ${toEncrypt[i].fileName} do not match")
+            assertTrue(areFilesIdentical(decrypted[i], toEncrypt[i]))
         }
     }
 
