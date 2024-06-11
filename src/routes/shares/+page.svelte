@@ -1,6 +1,15 @@
 <script>
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, ButtonGroup, Button } from 'flowbite-svelte';
-    import { CloudArrowUpSolid, EditSolid } from 'flowbite-svelte-icons';
+    import {
+        Table,
+        TableBody,
+        TableBodyCell,
+        TableBodyRow,
+        TableHead,
+        TableHeadCell,
+        ButtonGroup,
+        Button
+    } from 'flowbite-svelte';
+    import {CloudArrowUpSolid, EditSolid, CirclePlusSolid} from 'flowbite-svelte-icons';
 
 </script>
 
@@ -21,11 +30,11 @@
             <TableBodyCell>
                 <ButtonGroup>
                     <Button href="/">
-                        <CloudArrowUpSolid class="w-4 h-4 me-2" />
+                        <CloudArrowUpSolid class="w-4 h-4 me-2"/>
                         Upload
                     </Button>
                     <Button href="/">
-                        <EditSolid class="w-4 h-4 me-2" />
+                        <EditSolid class="w-4 h-4 me-2"/>
                         Edit
                     </Button>
                 </ButtonGroup>
@@ -38,12 +47,25 @@
             <TableBodyCell>
                 <ButtonGroup>
                     <Button href="/">
-                        <CloudArrowUpSolid class="w-4 h-4 me-2" />
+                        <CloudArrowUpSolid class="w-4 h-4 me-2"/>
                         Upload
                     </Button>
                     <Button href="/">
-                        <EditSolid class="w-4 h-4 me-2" />
+                        <EditSolid class="w-4 h-4 me-2"/>
                         Edit
+                    </Button>
+                </ButtonGroup>
+            </TableBodyCell>
+        </TableBodyRow>
+        <TableBodyRow>
+            <TableBodyCell></TableBodyCell>
+            <TableBodyCell></TableBodyCell>
+            <TableBodyCell></TableBodyCell>
+            <TableBodyCell>
+                <ButtonGroup>
+                    <Button href="/">
+                        <CirclePlusSolid class="w-4 h-4 me-2"/>
+                        Create a share
                     </Button>
                 </ButtonGroup>
             </TableBodyCell>
