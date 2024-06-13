@@ -69,7 +69,7 @@
             <TableBodyCell></TableBodyCell>
             <TableBodyCell>
                 <ButtonGroup>
-                    <Button href="/">
+                    <Button href="/shares/create">
                         <CirclePlusSolid class="w-4 h-4 me-2"/>
                         Create a share
                     </Button>
