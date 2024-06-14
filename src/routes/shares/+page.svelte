@@ -9,7 +9,7 @@
         ButtonGroup,
         Button
     } from 'flowbite-svelte';
-    import {CloudArrowUpSolid, EditSolid, CirclePlusSolid} from 'flowbite-svelte-icons';
+    import {CloudArrowUpOutline, ListOutline, CirclePlusSolid} from 'flowbite-svelte-icons';
 
     const shareData = [
         {
@@ -52,12 +52,12 @@
                 <TableBodyCell>
                     <ButtonGroup>
                         <Button href="/">
-                            <CloudArrowUpSolid class="w-4 h-4 me-2"/>
+                            <CloudArrowUpOutline class="w-4 h-4 me-2"/>
                             Upload
                         </Button>
-                        <Button href="/shares/{data.id}/edit">
-                            <EditSolid class="w-4 h-4 me-2"/>
-                            Edit
+                        <Button href="/shares/{data.id}/details">
+                            <ListOutline class="w-4 h-4 me-2"/>
+                            Details
                         </Button>
                     </ButtonGroup>
                 </TableBodyCell>
