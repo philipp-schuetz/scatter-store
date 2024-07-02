@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {
         Table,
         TableBody,
@@ -11,23 +11,44 @@
     } from 'flowbite-svelte';
     import {CloudArrowUpOutline, ListOutline, CirclePlusSolid} from 'flowbite-svelte-icons';
 
-    const shareData = [
+    const shareData: Share[] = [
         {
             id: "1234ger34g43QW",
             name: "Documents",
-            path: "/documents",
+            directory: "/documents",
+            providers: [
+                {
+                    id: "1234ger34g43QW",
+                    name: "ftp",
+                    displayName: "FTP Server 1",
+                }
+            ],
             lastUploaded: "01/01/2000 00:00"
         },
         {
             id: "fga4a4as4ga4a4g",
             name: "Photos",
-            path: "/photos",
+            directory: "/photos",
+            providers: [
+                {
+                    id: "1234ger34g43QW",
+                    name: "ftp",
+                    displayName: "FTP Server 1",
+                }
+            ],
             lastUploaded: "01/01/2001 00:01"
         },
         {
             id: "a4gg44g4g8989",
             name: "Music",
-            path: "/music",
+            directory: "/music",
+            providers: [
+                {
+                    id: "1234ger34g43QW",
+                    name: "ftp",
+                    displayName: "FTP Server 1",
+                }
+            ],
             lastUploaded: "01/01/2002 00:02"
         }
     ]
