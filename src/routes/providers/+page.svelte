@@ -14,18 +14,18 @@
     const providerData: Provider[] = [
         {
             id: "1234ger34g43QW",
-            name: "ftp",
-            displayName: "FTP Server 1",
+            type: "ftp",
+            name: "FTP Server 1",
         },
         {
             id: "pq93gh8q384gnf",
-            name: "google_drive",
-            displayName: "Google Drive Main",
+            type: "google_drive",
+            name: "Google Drive Main",
         },
         {
             id: "qo34bg89qqg",
-            name: "gcp",
-            displayName: "Google Cloud Platform",
+            type: "gcp",
+            name: "Google Cloud Platform",
         },
     ]
 
@@ -41,7 +41,7 @@
     <TableBody tableBodyClass="divide-y">
         {#each providerData as data}
             <TableBodyRow>
-                <TableBodyCell>{data.displayName}</TableBodyCell>
+                <TableBodyCell>{data.name}</TableBodyCell>
                 <TableBodyCell>
                     <ButtonGroup>
                         <Button href="/providers/{data.id}/details">

@@ -4,13 +4,13 @@ interface GoogleDriveProvider extends Provider {
 interface Provider {
     id: string
     name: string
-    displayName: string
+    type: string
 }
 
 interface Share {
     id: string
     name: string
-    directory: string
+    path: string
     providers: Provider[]
     lastUploaded: string
 }
@@ -18,7 +18,7 @@ interface Share {
 let p: Share = {
     id: "n",
     name: "n",
-    directory: "n",
-    providers: [{id: "id", name: "gd", displayName: "GooDr"},{id: "id", name: "gd", displayName: "GooDr"}],
+    path: "n",
+    providers: [{id: "id", type: "gd", name: "GooDr"},{id: "id", type: "gd", name: "GooDr"}],
     lastUploaded: "n",
 }
